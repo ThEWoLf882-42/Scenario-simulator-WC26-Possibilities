@@ -918,7 +918,7 @@ const I18N = {
 		champion: 'بطل العالم',
 		selectPenaltyWinner: 'اختر الفائز بركلات الترجيح',
 		penalties: 'ركلات الترجيح',
-		advances: 'يتأهل',
+		advances: 'يتأهل على',
 		knockoutCleared: 'تم مسح نتائج الأدوار الإقصائية',
 		knockoutRandomized: 'تم إنشاء نتائج عشوائية للجدول',
 		waitingTeams: 'بانتظار المنتخبات',
