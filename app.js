@@ -803,7 +803,7 @@ const I18N = {
 		rankingCount: '48 teams',
 		groupPosition: 'Group pos.',
 		overallRankingNote:
-			'Ranking follows tournament progress: champion, runner-up, third, fourth, then elimination round. Teams tied at the same stage are ordered by their group-stage record.',
+			'Ranking follows tournament progress: champion, runner-up, third, fourth, then elimination round. MP, W, D, L, GF, GA, GD and points include completed group and knockout matches; shootout draws remain draws in the statistics.',
 		thirdPlaceFinish: 'Third place',
 		fourthPlace: 'Fourth place',
 		groupStage: 'Group stage',
@@ -924,7 +924,7 @@ const I18N = {
 		rankingCount: '48 منتخباً',
 		groupPosition: 'مركز المجموعة',
 		overallRankingNote:
-			'يتبع الترتيب مسار البطولة: البطل ثم الوصيف ثم المركز الثالث والرابع، وبعدها حسب دور الإقصاء. يتم ترتيب المنتخبات التي خرجت من الدور نفسه وفق سجلها في دور المجموعات.',
+			'يتبع الترتيب مسار البطولة: البطل ثم الوصيف ثم المركز الثالث والرابع، وبعدها حسب دور الإقصاء. تشمل الإحصاءات مباريات المجموعات والمباريات الإقصائية المكتملة، وتُحتسب المباريات التي حُسمت بركلات الترجيح كتعادل في الإحصاءات.',
 		thirdPlaceFinish: 'المركز الثالث',
 		fourthPlace: 'المركز الرابع',
 		groupStage: 'دور المجموعات',
@@ -1441,6 +1441,42 @@ function renderOverallRanking(tables, third, knockoutModel) {
 	const progress = new Map(
 		ranking.map(row => [row.code, { score: 0, statusKey: 'groupStage' }]),
 	);
+	const cumulative = new Map(ranking.map(row => [row.code, row]));
+	Object.values(model.results).forEach(match => {
+		const home = cumulative.get(match.home);
+		const away = cumulative.get(match.away);
+		const homeScore = match.record?.home;
+		const awayScore = match.record?.away;
+		if (
+			!home ||
+			!away ||
+			!Number.isInteger(homeScore) ||
+			!Number.isInteger(awayScore)
+		)
+			return;
+		home.mp++;
+		away.mp++;
+		home.gf += homeScore;
+		home.ga += awayScore;
+		away.gf += awayScore;
+		away.ga += homeScore;
+		if (homeScore > awayScore) {
+			home.w++;
+			away.l++;
+			home.pts += 3;
+		} else if (awayScore > homeScore) {
+			away.w++;
+			home.l++;
+			away.pts += 3;
+		} else {
+			home.d++;
+			away.d++;
+			home.pts++;
+			away.pts++;
+		}
+		home.gd = home.gf - home.ga;
+		away.gd = away.gf - away.ga;
+	});
 	[
 		['r32', 1, 'round32'],
 		['r16', 2, 'roundOf16'],
