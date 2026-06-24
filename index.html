@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#050505" />
   <title>WC26 Possibilities</title>
-  <link rel="stylesheet" href="styles.css?v=20260624-wc26-light18" />
+  <link rel="stylesheet" href="styles.css?v=20260624-wc26-ranking21" />
 </head>
 <body>
   <div class="ambient ambient-one"></div>
@@ -87,6 +87,7 @@
       <button class="view-tab active" data-view="groups" data-i18n="groups">Groups</button>
       <button class="view-tab" data-view="third" data-i18n="bestThird">Best third-place</button>
       <button class="view-tab" data-view="knockout" data-i18n="fullBracket">Full bracket</button>
+      <button class="view-tab" data-view="ranking" data-i18n="allTeams">All 48 teams</button>
     </nav>
 
     <section class="view-panel active" id="groupsView">
@@ -187,9 +188,39 @@
         <div id="moroccoRoute"></div>
       </article>
     </section>
+
+    <section class="view-panel" id="rankingView">
+      <div class="section-heading ranking-heading">
+        <div>
+          <div class="eyebrow" data-i18n="rankingEyebrow">Live tournament table</div>
+          <h2 data-i18n="overallRanking">Overall ranking</h2>
+        </div>
+        <span class="state-chip" data-i18n="rankingCount">48 teams</span>
+      </div>
+
+      <article class="panel ranking-panel">
+        <div class="table-wrap">
+          <table class="standings-table ranking-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th data-i18n="team">Team</th>
+                <th data-i18n="group">Group</th>
+                <th data-i18n="groupPosition">Group pos.</th>
+                <th>MP</th><th>W</th><th>D</th><th>L</th>
+                <th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+                <th data-i18n="status">Status</th>
+              </tr>
+            </thead>
+            <tbody id="overallStandings"></tbody>
+          </table>
+        </div>
+        <p class="footnote" data-i18n="overallRankingNote">Cross-group ranking uses points, goal difference, goals scored, wins and goals conceded. Official group tiebreakers still apply within each group.</p>
+      </article>
+    </section>
   </main>
 
   <div class="toast" id="toast" role="status"></div>
-  <script src="app.js?v=20260624-wc26-connectors15" defer></script>
+  <script src="app.js?v=20260624-wc26-ranking21" defer></script>
 </body>
 </html>

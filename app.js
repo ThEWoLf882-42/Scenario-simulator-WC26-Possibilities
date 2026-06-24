@@ -77,8 +77,8 @@ const BASE_MATCHES = [
 	m('B', 'QAT', 'SUI', 1, 1, '2026-06-13T19:00:00Z', true),
 	m('B', 'SUI', 'BIH', 4, 1, '2026-06-18T19:00:00Z', true),
 	m('B', 'CAN', 'QAT', 6, 0, '2026-06-18T22:00:00Z', true),
-	m('B', 'SUI', 'CAN', null, null, '2026-06-24T19:00:00Z'),
-	m('B', 'BIH', 'QAT', null, null, '2026-06-24T19:00:00Z'),
+	m('B', 'SUI', 'CAN', 2, 1, '2026-06-24T19:00:00Z', true),
+	m('B', 'BIH', 'QAT', 3, 1, '2026-06-24T19:00:00Z', true),
 	m('C', 'BRA', 'MAR', 1, 1, '2026-06-13T22:00:00Z', true),
 	m('C', 'HTI', 'SCO', 0, 1, '2026-06-14T01:00:00Z', true),
 	m('C', 'SCO', 'MAR', 0, 1, '2026-06-19T22:00:00Z', true),
@@ -797,6 +797,16 @@ const I18N = {
 		semifinal: 'Semi-final',
 		needsScores: 'Enter the remaining scores to refine the route.',
 		fullBracket: 'Full bracket',
+		allTeams: 'All 48 teams',
+		rankingEyebrow: 'Bracket-based standings',
+		overallRanking: 'Overall ranking',
+		rankingCount: '48 teams',
+		groupPosition: 'Group pos.',
+		overallRankingNote:
+			'Ranking follows tournament progress: champion, runner-up, third, fourth, then elimination round. Teams tied at the same stage are ordered by their group-stage record.',
+		thirdPlaceFinish: 'Third place',
+		fourthPlace: 'Fourth place',
+		groupStage: 'Group stage',
 		fullKnockoutBracket: 'Full knockout bracket',
 		editKnockoutHint:
 			'Enter knockout scores and winners will advance automatically.',
@@ -908,6 +918,16 @@ const I18N = {
 		semifinal: 'نصف النهائي',
 		needsScores: 'أدخل النتائج المتبقية لتحديد المسار بدقة أكبر.',
 		fullBracket: 'الجدول الكامل',
+		allTeams: 'جميع المنتخبات الـ48',
+		rankingEyebrow: 'الترتيب حسب الأدوار الإقصائية',
+		overallRanking: 'الترتيب العام',
+		rankingCount: '48 منتخباً',
+		groupPosition: 'مركز المجموعة',
+		overallRankingNote:
+			'يتبع الترتيب مسار البطولة: البطل ثم الوصيف ثم المركز الثالث والرابع، وبعدها حسب دور الإقصاء. يتم ترتيب المنتخبات التي خرجت من الدور نفسه وفق سجلها في دور المجموعات.',
+		thirdPlaceFinish: 'المركز الثالث',
+		fourthPlace: 'المركز الرابع',
+		groupStage: 'دور المجموعات',
 		fullKnockoutBracket: 'الجدول الكامل للأدوار الإقصائية',
 		editKnockoutHint:
 			'أدخل نتائج الأدوار الإقصائية وسيتأهل الفائز تلقائياً.',
@@ -1234,7 +1254,9 @@ function render() {
 	renderSelectedGroup(tables, third);
 	renderGroupCards(tables, third);
 	renderThird(third);
-	renderBracket(tables, third);
+	const knockoutModel = buildKnockoutModel(tables, third);
+	renderOverallRanking(tables, third, knockoutModel);
+	renderBracket(tables, third, knockoutModel);
 	renderSaved();
 	persist();
 	restoreScoreFocus(scoreFocus);
@@ -1406,6 +1428,91 @@ function renderThird(third) {
 		.join('');
 }
 
+function renderOverallRanking(tables, third, knockoutModel) {
+	const model = knockoutModel || buildKnockoutModel(tables, third);
+	const ranking = Object.entries(tables).flatMap(([group, rows]) =>
+		rows.map((row, index) => ({
+			...row,
+			group,
+			groupPosition: index + 1,
+		})),
+	);
+
+	const progress = new Map(
+		ranking.map(row => [row.code, { score: 0, statusKey: 'groupStage' }]),
+	);
+	[
+		['r32', 1, 'round32'],
+		['r16', 2, 'roundOf16'],
+		['qf', 3, 'quarterfinal'],
+		['sf', 4, 'semifinal'],
+		['third', 5, 'thirdPlace'],
+		['final', 6, 'final'],
+	].forEach(([stage, score, statusKey]) => {
+		(model.stages[stage] || []).forEach(match => {
+			[match.home, match.away].filter(Boolean).forEach(code => {
+				if (score > progress.get(code).score)
+					progress.set(code, { score, statusKey });
+			});
+		});
+	});
+
+	const placements = new Map();
+	const finalMatch = model.results[104];
+	const thirdMatch = model.results[103];
+	if (finalMatch?.winner) {
+		placements.set(finalMatch.winner, { place: 1, statusKey: 'champion' });
+		placements.set(finalMatch.loser, { place: 2, statusKey: 'runnerUp' });
+	}
+	if (thirdMatch?.winner) {
+		placements.set(thirdMatch.winner, {
+			place: 3,
+			statusKey: 'thirdPlaceFinish',
+		});
+		placements.set(thirdMatch.loser, {
+			place: 4,
+			statusKey: 'fourthPlace',
+		});
+	}
+
+	const tournamentScore = code => {
+		const placement = placements.get(code);
+		if (placement?.place === 1) return 610;
+		if (placement?.place === 2) return 609;
+		if (placement?.place === 3) return 510;
+		if (placement?.place === 4) return 509;
+		return progress.get(code).score * 100;
+	};
+
+	ranking.sort(
+		(a, b) =>
+			tournamentScore(b.code) - tournamentScore(a.code) ||
+			b.pts - a.pts ||
+			b.gd - a.gd ||
+			b.gf - a.gf ||
+			b.w - a.w ||
+			a.ga - b.ga ||
+			a.groupPosition - b.groupPosition ||
+			teamName(a.code).localeCompare(teamName(b.code), lang),
+	);
+
+	document.getElementById('overallStandings').innerHTML = ranking
+		.map((row, index) => {
+			const placement = placements.get(row.code);
+			const stage = progress.get(row.code);
+			const status = t(placement?.statusKey || stage.statusKey);
+			const statusClass = stage.score > 0 || placement ? 'in' : 'out';
+			const rowClass = placement
+				? `ranking-place-${placement.place}`
+				: stage.score > 0
+					? 'qualify-direct'
+					: '';
+			const rank = ['🥇', '🥈', '🥉'][index] || index + 1;
+			return `<tr class="${rowClass}"><td class="overall-rank">${rank}</td><td><div class="team-cell"><span class="team-flag">${TEAMS[row.code].flag}</span><span class="team-name"><strong>${teamName(row.code)}</strong><span class="team-code">${row.code}</span></span></div></td><td><span class="ranking-group">${row.group}</span></td><td>${row.groupPosition}</td><td>${row.mp}</td><td>${row.w}</td><td>${row.d}</td><td>${row.l}</td><td>${row.gf}</td><td>${row.ga}</td><td>${formatGd(row.gd)}</td><td class="points">${row.pts}</td><td><span class="status-label ${statusClass}">${status}</span></td></tr>`;
+		})
+		.join('');
+}
+
 function ensureKnockoutStore() {
 	if (!state.knockout || typeof state.knockout !== 'object')
 		state.knockout = {};
@@ -1553,8 +1660,8 @@ function buildKnockoutModel(tables, third, { randomize = false } = {}) {
 	};
 }
 
-function renderBracket(tables, third) {
-	const model = buildKnockoutModel(tables, third);
+function renderBracket(tables, third, providedModel = null) {
+	const model = providedModel || buildKnockoutModel(tables, third);
 
 	const pick = matchNumbers =>
 		matchNumbers.map(no => model.results[no]).filter(Boolean);

@@ -2230,3 +2230,110 @@ body.light .morocco-card .scenario-pill.ghost {
   background: rgba(255,255,255,.75);
   color: #050505;
 }
+
+/* Overall ranking — all 48 teams. */
+#rankingView .section-heading { border-color: var(--wc-lime); }
+
+.ranking-panel { padding: 22px; }
+
+.ranking-panel .table-wrap {
+  max-height: min(72vh, 920px);
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+
+.ranking-table {
+  min-width: 1080px;
+  margin-top: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.ranking-table th {
+  position: sticky;
+  top: 0;
+  z-index: 8;
+  background: var(--surface-strong);
+}
+
+.ranking-table td {
+  height: 58px;
+}
+
+.ranking-table tbody tr {
+  transition: background .15s ease, transform .15s ease;
+}
+
+.ranking-table tbody tr:hover {
+  background: color-mix(in srgb, var(--wc-blue) 10%, var(--surface));
+}
+
+.overall-rank {
+  width: 54px;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.ranking-table tr:nth-child(-n + 3) .overall-rank { font-size: 23px; }
+
+.ranking-table tr.ranking-place-1 {
+  background: linear-gradient(90deg, rgba(255,224,0,.22), transparent 74%);
+  box-shadow: inset 6px 0 0 var(--wc-yellow);
+}
+
+.ranking-table tr.ranking-place-2 {
+  background: linear-gradient(90deg, rgba(190,202,214,.18), transparent 74%);
+  box-shadow: inset 6px 0 0 #bdc8d2;
+}
+
+.ranking-table tr.ranking-place-3 {
+  background: linear-gradient(90deg, rgba(205,127,50,.2), transparent 74%);
+  box-shadow: inset 6px 0 0 #cd7f32;
+}
+
+.ranking-table tr.ranking-place-4 {
+  background: linear-gradient(90deg, rgba(117,70,255,.12), transparent 74%);
+  box-shadow: inset 6px 0 0 var(--wc-violet);
+}
+
+.ranking-group {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--surface-soft);
+  font-weight: 950;
+}
+
+.ranking-table .status-label {
+  min-width: 112px;
+  justify-content: center;
+}
+
+body.light .ranking-table th { background: #e9e7e1; }
+
+body.light .ranking-table tbody tr:hover {
+  background: rgba(0,184,240,.09);
+}
+
+body.light .ranking-table tr.ranking-place-1 {
+  background: linear-gradient(90deg, rgba(255,224,0,.3), transparent 74%);
+}
+
+body.light .ranking-table tr.ranking-place-2 {
+  background: linear-gradient(90deg, rgba(137,151,165,.2), transparent 74%);
+}
+
+body.light .ranking-table tr.ranking-place-3 {
+  background: linear-gradient(90deg, rgba(205,127,50,.22), transparent 74%);
+}
+
+@media (max-width: 700px) {
+  .ranking-panel { padding: 13px; }
+  .ranking-table { min-width: 980px; }
+  .ranking-panel .table-wrap { max-height: 68vh; }
+}
