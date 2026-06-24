@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#050505" />
+  <title>WC26 Possibilities</title>
+  <link rel="stylesheet" href="styles.css?v=20260624-wc26-connectors16" />
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">
+        <img src="2026_FIFA_World_Cup_emblem.svg" alt="FIFA World Cup 26" />
+      </div>
+      <div class="brand-copy">
+        <div class="eyebrow" data-i18n="eyebrow">Scenario simulator</div>
+        <h1>WC26 <span data-i18n="possibilities">Possibilities</span></h1>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="data-chip"><span class="live-dot"></span><span data-i18n="dataThrough">Results through 23 Jun 2026</span></span>
+      <button class="icon-button" id="languageButton" title="العربية / English">AR</button>
+      <button class="icon-button" id="themeButton" title="Toggle theme">☾</button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero-grid">
+      <article class="hero-card morocco-card">
+        <div class="hero-card-head">
+          <div>
+            <div class="eyebrow" data-i18n="moroccoFocus">Morocco focus</div>
+            <h2><span class="flag">🇲🇦</span> <span data-team="MAR">Morocco</span></h2>
+          </div>
+          <div class="position-badge" id="moroccoPosition">—</div>
+        </div>
+        <div class="morocco-summary" id="moroccoSummary"></div>
+        <div class="quick-scenarios">
+          <span data-i18n="setFinalMatch">Set Morocco–Haiti:</span>
+          <button class="scenario-pill" data-mar-score="2" data-hai-score="0" data-i18n="win">Win</button>
+          <button class="scenario-pill" data-mar-score="1" data-hai-score="1" data-i18n="draw">Draw</button>
+          <button class="scenario-pill" data-mar-score="0" data-hai-score="1" data-i18n="loss">Loss</button>
+          <button class="scenario-pill ghost" id="clearMorocco" data-i18n="clear">Clear</button>
+        </div>
+      </article>
+
+      <article class="hero-card summary-card">
+        <div class="eyebrow" data-i18n="scenarioOverview">Scenario overview</div>
+        <div class="summary-stats">
+          <div><strong id="matchesEntered">0</strong><span data-i18n="scoresEntered">scores entered</span></div>
+          <div><strong id="groupsComplete">0</strong><span data-i18n="groupsComplete">groups complete</span></div>
+          <div><strong id="qualifiedCount">0</strong><span data-i18n="projectedQualified">projected qualified</span></div>
+        </div>
+        <div class="progress-track"><span id="tournamentProgress"></span></div>
+        <p class="muted" id="scenarioTimestamp"></p>
+      </article>
+    </section>
+
+    <section class="control-bar">
+      <div class="control-group">
+        <button class="primary-button" id="resetCurrent" data-i18n="resetCurrent">Reset current results</button>
+        <button class="secondary-button" id="clearRemaining" data-i18n="clearRemaining">Clear remaining</button>
+        <button class="secondary-button" id="randomizeRemaining" data-i18n="randomize">Randomize remaining</button>
+      </div>
+      <div class="control-group">
+        <button class="secondary-button" id="saveScenario" data-i18n="saveScenario">Save scenario</button>
+        <button class="secondary-button" id="exportScenario" data-i18n="export">Export</button>
+        <label class="secondary-button file-label"><span data-i18n="import">Import</span><input type="file" id="importScenario" accept="application/json" /></label>
+      </div>
+    </section>
+
+    <section class="saved-scenarios" id="savedScenariosWrap" hidden>
+      <div class="section-heading compact-heading">
+        <div>
+          <div class="eyebrow" data-i18n="saved">Saved</div>
+          <h2 data-i18n="scenarios">Scenarios</h2>
+        </div>
+      </div>
+      <div class="scenario-list" id="savedScenarios"></div>
+    </section>
+
+    <nav class="view-tabs" aria-label="Views">
+      <button class="view-tab active" data-view="groups" data-i18n="groups">Groups</button>
+      <button class="view-tab" data-view="third" data-i18n="bestThird">Best third-place</button>
+      <button class="view-tab" data-view="knockout" data-i18n="fullBracket">Full bracket</button>
+    </nav>
+
+    <section class="view-panel active" id="groupsView">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow" data-i18n="editScores">Edit any score</div>
+          <h2 data-i18n="groupSimulator">Group simulator</h2>
+        </div>
+        <div class="group-switcher" id="groupSwitcher"></div>
+      </div>
+
+      <div class="group-layout">
+        <article class="panel standings-panel">
+          <div class="panel-title-row">
+            <h3 id="groupTitle">Group C</h3>
+            <span class="state-chip" id="groupState">In progress</span>
+          </div>
+          <div class="table-wrap">
+            <table class="standings-table">
+              <thead>
+                <tr>
+                  <th>#</th><th data-i18n="team">Team</th><th>MP</th><th>W</th><th>D</th><th>L</th><th>GD</th><th>Pts</th>
+                </tr>
+              </thead>
+              <tbody id="groupStandings"></tbody>
+            </table>
+          </div>
+          <div class="legend">
+            <span><i class="legend-dot direct"></i><span data-i18n="directQualification">Top two qualify</span></span>
+            <span><i class="legend-dot third"></i><span data-i18n="thirdPossibility">Third may qualify</span></span>
+          </div>
+        </article>
+
+        <article class="panel matches-panel">
+          <div class="panel-title-row">
+            <h3 data-i18n="matchesAndScores">Matches & scores</h3>
+            <span class="muted small" data-i18n="instantUpdate">Tables update instantly</span>
+          </div>
+          <div class="matches-list" id="groupMatches"></div>
+        </article>
+      </div>
+
+      <div class="all-groups-heading">
+        <h3 data-i18n="allGroupsSnapshot">All groups snapshot</h3>
+        <span class="muted small" data-i18n="selectGroupHint">Select a card to edit its matches</span>
+      </div>
+      <div class="group-cards" id="groupCards"></div>
+    </section>
+
+    <section class="view-panel" id="thirdView">
+      <div class="section-heading">
+        <div>
+          <div class="eyebrow" data-i18n="cutlineTracker">Live cutline tracker</div>
+          <h2 data-i18n="bestThirdTable">Best third-place table</h2>
+        </div>
+        <span class="state-chip warning" data-i18n="topEightAdvance">Top 8 advance</span>
+      </div>
+      <article class="panel">
+        <div class="table-wrap">
+          <table class="standings-table third-table">
+            <thead><tr><th>#</th><th data-i18n="team">Team</th><th data-i18n="group">Group</th><th>MP</th><th>GD</th><th>GF</th><th>Pts</th><th data-i18n="status">Status</th></tr></thead>
+            <tbody id="thirdStandings"></tbody>
+          </table>
+        </div>
+        <p class="footnote" data-i18n="thirdTieNote">Scores calculate points, goal difference and goals scored. Exact ties can still depend on team conduct score and FIFA ranking.</p>
+      </article>
+    </section>
+
+    <section class="view-panel" id="knockoutView">
+      <div class="section-heading knockout-heading">
+        <div>
+          <div class="eyebrow" data-i18n="routePreview">Route preview</div>
+          <h2 data-i18n="fullKnockoutBracket">Full knockout bracket</h2>
+          <p class="muted bracket-help" data-i18n="editKnockoutHint">Enter knockout scores and winners will advance automatically.</p>
+        </div>
+        <div class="knockout-actions">
+          <span class="state-chip" id="bracketState" data-i18n="projection">Projection</span>
+          <button class="secondary-button" id="clearKnockout" data-i18n="clearKnockout">Clear knockout</button>
+          <button class="secondary-button" id="randomizeKnockout" data-i18n="randomizeKnockout">Randomize bracket</button>
+        </div>
+      </div>
+      <div class="notice-card">
+        <strong data-i18n="thirdAllocationTitle">Third-place allocation</strong>
+        <span data-i18n="thirdAllocationNote">The eight qualifying third-place groups are assigned using FIFA's official 495-combination Annex C matrix.</span>
+      </div>
+
+      <div class="bracket-scroll" aria-label="World Cup knockout bracket">
+        <div class="tournament-bracket" id="tournamentBracket"></div>
+      </div>
+
+      <div class="bracket-footer-grid">
+        <article class="panel champion-panel" id="championPanel"></article>
+        <article class="panel third-place-panel" id="thirdPlacePanel"></article>
+      </div>
+
+      <article class="panel morocco-route-panel">
+        <div class="panel-title-row"><h3 data-i18n="moroccoRoute">Morocco route</h3><span class="flag large">🇲🇦</span></div>
+        <div id="moroccoRoute"></div>
+      </article>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+  <script src="app.js?v=20260624-wc26-connectors15" defer></script>
+</body>
+</html>
