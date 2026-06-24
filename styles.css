@@ -1978,6 +1978,133 @@ input[type="number"]::-webkit-inner-spin-button {
   }
 }
 
+/* Complete light-mode palette for the knockout bracket. */
+body.light #knockoutView .bracket-scroll {
+  background:
+    linear-gradient(rgba(0,0,0,.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,0,0,.045) 1px, transparent 1px),
+    #f3f1ec;
+  background-size: 24px 24px;
+  border-color: rgba(0,0,0,.24);
+  box-shadow: 8px 8px 0 rgba(0,184,240,.2);
+  color-scheme: light;
+}
+
+body.light .bracket-stage-title {
+  background: #ffffff;
+  color: #050505;
+  box-shadow: 0 5px 0 rgba(0,0,0,.09);
+}
+
+body.light .bracket-stage-title b {
+  border: 1px solid rgba(0,0,0,.2);
+  background: #050505;
+  color: #ffffff;
+}
+
+body.light .bracket-final-title {
+  background: var(--wc-yellow);
+  color: #050505;
+}
+
+body.light .bracket-final-title b {
+  border-color: #050505;
+  background: #050505;
+  color: var(--wc-yellow);
+}
+
+body.light .knockout-match {
+  border-color: rgba(0,0,0,.26);
+  background: #ffffff;
+  color: #050505;
+  box-shadow: 4px 4px 0 rgba(0,0,0,.14);
+}
+
+body.light .knockout-match:hover {
+  border-color: #007da6;
+  box-shadow: 4px 4px 0 rgba(0,184,240,.38);
+}
+
+body.light .knockout-match-head {
+  background: #e9e7e1;
+  color: #4d5155;
+}
+
+body.light .knockout-match-head b,
+body.light .projected-tag {
+  color: #725b00;
+}
+
+body.light .knockout-team {
+  border-top-color: rgba(0,0,0,.14);
+}
+
+body.light .knockout-team.winner {
+  background: linear-gradient(90deg, rgba(0,170,105,.2), transparent);
+}
+
+body.light .knockout-team.loser { opacity: .62; }
+
+body.light .ko-flag.placeholder {
+  background: #e5e3dd;
+  color: #555b5f;
+}
+
+body.light .knockout-score-input {
+  border-color: rgba(0,0,0,.25);
+  background: #ffffff;
+  color: #050505;
+}
+
+body.light .possible-groups {
+  border-top-color: rgba(0,0,0,.14);
+  color: #5c6266;
+}
+
+body.light .penalty-picker {
+  border-top-color: rgba(143,105,0,.35);
+  background: rgba(255,224,0,.2);
+  color: #6b5200;
+}
+
+body.light .penalty-picker button {
+  border-color: rgba(107,82,0,.35);
+  color: #5c4700;
+}
+
+body.light .penalty-picker button.selected {
+  background: #6b5200;
+  color: #ffffff;
+}
+
+body.light .bracket-connector::before,
+body.light .bracket-connector::after,
+body.light .third-place-branch {
+  background: rgba(0,0,0,.38);
+}
+
+body.light .final-trophy {
+  border-color: #8a7000;
+  background: #ffffff;
+  box-shadow: 5px 5px 0 rgba(255,224,0,.42);
+}
+
+body.light .bracket-final-card .knockout-match {
+  border-color: #9a7c00;
+  box-shadow: 6px 6px 0 rgba(255,224,0,.35);
+}
+
+body.light .bracket-third-label {
+  border-color: rgba(145,78,20,.45);
+  background: rgba(205,127,50,.17);
+  color: #844815;
+}
+
+body.light .bracket-third-card .knockout-match {
+  border-color: rgba(145,78,20,.5);
+  box-shadow: 5px 5px 0 rgba(205,127,50,.25);
+}
+
 /* Editable third-place match beneath the centered final. */
 .bracket-final-grid { position: relative; }
 
@@ -2041,4 +2168,65 @@ input[type="number"]::-webkit-inner-spin-button {
   display: block;
   height: 1px;
   background: rgba(255,255,255,.5);
+}
+
+body.light .bracket-wing-left .bracket-column:last-child .third-place-branch,
+body.light .bracket-wing-right .bracket-column:first-child .third-place-branch {
+  background: rgba(0,0,0,.38);
+}
+
+/* Morocco focus card in light mode. */
+body.light .morocco-card {
+  border-color: rgba(0,0,0,.25);
+  background:
+    linear-gradient(115deg, transparent 0 68%, rgba(211,37,53,.94) 68% 82%, rgba(0,122,61,.94) 82%),
+    linear-gradient(135deg, #ffffff, #e9e7e1);
+  color: #050505;
+  box-shadow: 8px 8px 0 rgba(0,122,61,.18);
+}
+
+body.light .morocco-card::after {
+  border-color: rgba(255,255,255,.22);
+}
+
+body.light .morocco-card .eyebrow {
+  color: #a7192e;
+}
+
+body.light .morocco-card .muted,
+body.light .morocco-card .quick-scenarios {
+  color: #4f5559;
+}
+
+body.light .morocco-card .metric-chip {
+  border-color: rgba(0,0,0,.18);
+  background: rgba(255,255,255,.86);
+  box-shadow: 3px 3px 0 rgba(0,0,0,.08);
+}
+
+body.light .morocco-card .metric-chip span {
+  color: #555b60;
+}
+
+body.light .morocco-card .position-badge {
+  border-color: #050505;
+  background: #050505;
+  color: #ffffff;
+  box-shadow: 4px 4px 0 #007a3d;
+}
+
+body.light .morocco-card .scenario-pill {
+  border-color: #050505;
+  background: #050505;
+  color: #ffffff;
+}
+
+body.light .morocco-card .scenario-pill:hover {
+  box-shadow: 3px 3px 0 #d32535;
+}
+
+body.light .morocco-card .scenario-pill.ghost {
+  border-color: rgba(0,0,0,.32);
+  background: rgba(255,255,255,.75);
+  color: #050505;
 }
