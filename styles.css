@@ -2337,3 +2337,43 @@ body.light .ranking-table tr.ranking-place-3 {
   .ranking-table { min-width: 980px; }
   .ranking-panel .table-wrap { max-height: 68vh; }
 }
+
+/* Keep the knockout bracket from widening the whole page. */
+body:has(#knockoutView.active) {
+  overflow-x: hidden;
+}
+
+body:has(#knockoutView.active) .shell {
+  width: min(1760px, calc(100% - 32px));
+}
+
+#knockoutView {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+#knockoutView .bracket-scroll {
+  width: 100%;
+  max-width: 100%;
+  margin-inline: auto;
+  transform: none;
+  container-type: inline-size;
+}
+
+html[dir="rtl"] #knockoutView .bracket-scroll {
+  transform: none;
+}
+
+body:has(#knockoutView.active) .bracket-board {
+  --bracket-column-gap: clamp(12px, 1cqw, 20px);
+  --bracket-center-gap: clamp(16px, 1.1cqw, 22px);
+  grid-template-columns: auto clamp(184px, 12cqw, 230px) auto;
+}
+
+body:has(#knockoutView.active) .bracket-wing {
+  grid-template-columns: repeat(4, clamp(144px, calc((100cqw - 400px) / 8), 210px));
+}
+
+@supports not (overflow: clip) {
+  #knockoutView { overflow-x: hidden; }
+}
