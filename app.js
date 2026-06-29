@@ -154,6 +154,37 @@ function m(group, home, away, homeScore, awayScore, kickoff, played = false) {
 	};
 }
 
+const BASE_KNOCKOUT_RESULTS = {
+	73: {
+		homeTeam: 'RSA',
+		awayTeam: 'CAN',
+		home: 0,
+		away: 1,
+		tiebreakWinner: null,
+	},
+	74: {
+		homeTeam: 'GER',
+		awayTeam: 'PAR',
+		home: 1,
+		away: 1,
+		tiebreakWinner: null,
+	},
+	75: {
+		homeTeam: 'NED',
+		awayTeam: 'MAR',
+		home: null,
+		away: null,
+		tiebreakWinner: null,
+	},
+	76: {
+		homeTeam: 'BRA',
+		awayTeam: 'JPN',
+		home: 2,
+		away: 1,
+		tiebreakWinner: null,
+	},
+};
+
 const R32 = [
 	{ no: 73, a: '2A', b: '2B' },
 	{ no: 74, a: '1E', third: ['A', 'B', 'C', 'D', 'F'] },
@@ -1570,15 +1601,63 @@ function resolveProgressionSource(source, results) {
 	return source[0] === 'L' ? match?.loser || null : match?.winner || null;
 }
 
+function emptyKnockoutRecord(signature) {
+	return {
+		home: null,
+		away: null,
+		tiebreakWinner: null,
+		signature,
+		source: null,
+	};
+}
+
+function isEmptyKnockoutRecord(record) {
+	return (
+		record &&
+		record.home === null &&
+		record.away === null &&
+		record.tiebreakWinner === null
+	);
+}
+
+function officialKnockoutRecord(no, home, away, signature) {
+	const official = BASE_KNOCKOUT_RESULTS[String(no)];
+	if (!official || !home || !away) return null;
+	if (official.homeTeam !== home || official.awayTeam !== away) return null;
+	if (!Number.isInteger(official.home) || !Number.isInteger(official.away))
+		return null;
+	const tiebreakWinner = official.tiebreakWinner || null;
+	if (tiebreakWinner && tiebreakWinner !== home && tiebreakWinner !== away)
+		return null;
+	return {
+		home: official.home,
+		away: official.away,
+		tiebreakWinner,
+		signature,
+		source: 'official',
+	};
+}
+
 function ensureKnockoutRecord(no, home, away, homeKey, awayKey) {
 	ensureKnockoutStore();
 	const key = String(no);
 	const signature = `${home || homeKey || ''}|${away || awayKey || ''}`;
+	const officialRecord = officialKnockoutRecord(no, home, away, signature);
 	let record = state.knockout[key];
 	if (!record || record.signature !== signature) {
-		record = { home: null, away: null, tiebreakWinner: null, signature };
+		record = officialRecord
+			? { ...officialRecord }
+			: emptyKnockoutRecord(signature);
 		state.knockout[key] = record;
+	} else if (
+		officialRecord &&
+		(record.source === 'official' || isEmptyKnockoutRecord(record))
+	) {
+		Object.assign(record, officialRecord);
+	} else if (!officialRecord && record.source === 'official') {
+		Object.assign(record, emptyKnockoutRecord(signature));
 	}
+	record.signature = signature;
 	record.homeTeam = home || null;
 	record.awayTeam = away || null;
 	if (record.tiebreakWinner !== home && record.tiebreakWinner !== away)
@@ -1612,7 +1691,7 @@ function createKnockoutMatch(
 	possibleGroups = [],
 ) {
 	const record = ensureKnockoutRecord(def.no, home, away, homeKey, awayKey);
-	if (randomize && home && away) {
+	if (randomize && home && away && record.source !== 'official') {
 		let homeScore = Math.floor(Math.random() * 5);
 		let awayScore = Math.floor(Math.random() * 5);
 		while (homeScore === awayScore)
@@ -1620,6 +1699,7 @@ function createKnockoutMatch(
 		record.home = homeScore;
 		record.away = awayScore;
 		record.tiebreakWinner = null;
+		record.source = 'manual';
 	}
 	const outcome = knockoutOutcome(home, away, record);
 	return {
@@ -1901,6 +1981,7 @@ function onKnockoutScoreInput(event) {
 		raw === ''
 			? null
 			: Math.max(0, Math.min(20, Number.parseInt(raw, 10) || 0));
+	record.source = 'manual';
 	if (record.home !== record.away) record.tiebreakWinner = null;
 	window.requestAnimationFrame(render);
 }
@@ -1909,6 +1990,7 @@ function onPenaltyWinner(event) {
 	const record = state.knockout?.[event.currentTarget.dataset.koMatch];
 	if (!record || record.home !== record.away) return;
 	record.tiebreakWinner = event.currentTarget.dataset.penaltyWinner;
+	record.source = 'manual';
 	render();
 }
 
