@@ -167,7 +167,7 @@ const BASE_KNOCKOUT_RESULTS = {
 		awayTeam: 'PAR',
 		home: 1,
 		away: 1,
-		tiebreakWinner: null,
+		tiebreakWinner: 'PAR',
 	},
 	75: {
 		homeTeam: 'NED',
