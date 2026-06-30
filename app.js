@@ -739,7 +739,7 @@ const I18N = {
 	en: {
 		eyebrow: 'Scenario simulator',
 		possibilities: 'Possibilities',
-		dataThrough: 'Results through 28 Jun 2026',
+		dataThrough: 'Results through 30 Jun 2026',
 		moroccoFocus: 'Morocco focus',
 		setFinalMatch: 'Set Morocco–Haiti:',
 		win: 'Win',
@@ -860,7 +860,7 @@ const I18N = {
 	ar: {
 		eyebrow: 'محاكي السيناريوهات',
 		possibilities: 'الاحتمالات',
-		dataThrough: 'النتائج حتى 28 يونيو 2026',
+		dataThrough: 'النتائج حتى 30 يونيو 2026',
 		moroccoFocus: 'تركيز على المغرب',
 		setFinalMatch: 'نتيجة المغرب–هايتي:',
 		win: 'فوز',
