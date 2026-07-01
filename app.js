@@ -68,9 +68,7 @@ const GROUPS = {
 
 const OFFICIAL_RESULTS = globalThis.WC26_OFFICIAL_RESULTS || {};
 const BASE_KNOCKOUT_RESULTS = OFFICIAL_RESULTS.knockout || {};
-const BASE_MATCHES = normalizeGroupMatches(
-	OFFICIAL_RESULTS.groupMatches || [],
-);
+const BASE_MATCHES = normalizeGroupMatches(OFFICIAL_RESULTS.groupMatches || []);
 
 function m(group, home, away, homeScore, awayScore, kickoff, played = false) {
 	return {
@@ -1920,6 +1918,62 @@ function renderChampionPanels(model) {
 		`<div class="champion-icon bronze">🥉</div><div><div class="eyebrow">${t('thirdPlace')}</div><h3>${bronze ? `${TEAMS[bronze].flag} ${teamName(bronze)}` : t('waitingTeams')}</h3><p class="muted">${t('match')} 103</p></div>`;
 }
 
+function sourceCanBecomeTeam(source, team, model, seen = new Set()) {
+	if (!source) return false;
+	const seenKey = `${source}|${team}`;
+	if (seen.has(seenKey)) return false;
+	seen.add(seenKey);
+
+	if (/^[WL]\d+$/.test(source)) {
+		const match = model.results[Number(source.slice(1))];
+		if (!match) return false;
+		if (source[0] === 'W' && match.winner) return match.winner === team;
+		if (source[0] === 'L' && match.loser) return match.loser === team;
+		return (
+			matchSideCanBecomeTeam(match, 'home', team, model, seen) ||
+			matchSideCanBecomeTeam(match, 'away', team, model, seen)
+		);
+	}
+
+	return Object.values(model.results).some(
+		match =>
+			(match.homeKey === source && match.home === team) ||
+			(match.awayKey === source && match.away === team),
+	);
+}
+
+function matchSideCanBecomeTeam(match, side, team, model, seen = new Set()) {
+	if (!match) return false;
+	if (match[side] === team) return true;
+	return sourceCanBecomeTeam(match[`${side}Key`], team, model, seen);
+}
+
+function teamRouteSide(match, team, model) {
+	if (match.home === team) return 'home';
+	if (match.away === team) return 'away';
+	if (matchSideCanBecomeTeam(match, 'home', team, model)) return 'home';
+	if (matchSideCanBecomeTeam(match, 'away', team, model)) return 'away';
+	return null;
+}
+
+function sourceTeamOptions(source, model) {
+	if (!/^[WL]\d+$/.test(source || '')) return [];
+	const sourceMatch = model.results[Number(source.slice(1))];
+	if (!sourceMatch) return [];
+	return [sourceMatch.home, sourceMatch.away].filter(Boolean);
+}
+
+function routeOpponentText(match, opponentSide, model) {
+	const opponent = match[opponentSide];
+	if (opponent) return `${TEAMS[opponent].flag} ${teamName(opponent)}`;
+	const source = match[`${opponentSide}Key`];
+	const options = sourceTeamOptions(source, model);
+	if (options.length) {
+		return `${knockoutSourceLabel(source)} (${options.map(team => `${TEAMS[team].flag} ${teamName(team)}`).join(' / ')})`;
+	}
+	return knockoutSourceLabel(source) || t('waitingTeams');
+}
+
 function renderMoroccoRoute(tables, third, model) {
 	const pos = tables.C.findIndex(x => x.code === 'MAR') + 1;
 	const thirdRank = third.findIndex(x => x.code === 'MAR') + 1;
@@ -1939,15 +1993,14 @@ function renderMoroccoRoute(tables, third, model) {
 	];
 	const steps = routeStages
 		.map(([stage, key]) => {
-			const match = model.stages[stage].find(
-				item => item.home === 'MAR' || item.away === 'MAR',
+			const match = model.stages[stage].find(item =>
+				teamRouteSide(item, 'MAR', model),
 			);
 			if (!match)
-				return `<div class="route-step"><span>${t(key)}</span><strong>${qualified ? 'TBD' : '—'}</strong></div>`;
-			const opponent = match.home === 'MAR' ? match.away : match.home;
-			const opponentText = opponent
-				? `${TEAMS[opponent].flag} ${teamName(opponent)}`
-				: t('waitingTeams');
+				return `<div class="route-step route-tbd"><span>${t(key)}</span><strong>${qualified ? 'TBD' : '—'}</strong></div>`;
+			const moroccoSide = teamRouteSide(match, 'MAR', model);
+			const opponentSide = moroccoSide === 'home' ? 'away' : 'home';
+			const opponentText = routeOpponentText(match, opponentSide, model);
 			let status = `vs ${opponentText}`;
 			if (match.winner === 'MAR')
 				status = `✓ ${t('advances')} · ${opponentText}`;
