@@ -135,7 +135,7 @@ const knockout = {
 	80: {
 		homeTeam: 'ENG',
 		awayTeam: 'COD',
-		home: 0,
+		home: 2,
 		away: 1,
 		tiebreakWinner: null,
 	},
@@ -149,8 +149,8 @@ const knockout = {
 	82: {
 		homeTeam: 'BEL',
 		awayTeam: 'SEN',
-		home: null,
-		away: null,
+		home: 3,
+		away: 2,
 		tiebreakWinner: null,
 	},
 	83: {
