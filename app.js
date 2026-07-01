@@ -66,80 +66,11 @@ const GROUPS = {
 	L: ['ENG', 'CRO', 'GHA', 'PAN'],
 };
 
-const BASE_MATCHES = [
-	m('A', 'MEX', 'RSA', 2, 0, '2026-06-11T19:00:00Z', true),
-	m('A', 'KOR', 'CZE', 2, 1, '2026-06-12T02:00:00Z', true),
-	m('A', 'CZE', 'RSA', 1, 1, '2026-06-18T16:00:00Z', true),
-	m('A', 'MEX', 'KOR', 1, 0, '2026-06-19T01:00:00Z', true),
-	m('A', 'CZE', 'MEX', 0, 3, '2026-06-25T01:00:00Z', true),
-	m('A', 'RSA', 'KOR', 1, 0, '2026-06-25T01:00:00Z', true),
-	m('B', 'CAN', 'BIH', 1, 1, '2026-06-12T19:00:00Z', true),
-	m('B', 'QAT', 'SUI', 1, 1, '2026-06-13T19:00:00Z', true),
-	m('B', 'SUI', 'BIH', 4, 1, '2026-06-18T19:00:00Z', true),
-	m('B', 'CAN', 'QAT', 6, 0, '2026-06-18T22:00:00Z', true),
-	m('B', 'SUI', 'CAN', 2, 1, '2026-06-24T19:00:00Z', true),
-	m('B', 'BIH', 'QAT', 3, 1, '2026-06-24T19:00:00Z', true),
-	m('C', 'BRA', 'MAR', 1, 1, '2026-06-13T22:00:00Z', true),
-	m('C', 'HTI', 'SCO', 0, 1, '2026-06-14T01:00:00Z', true),
-	m('C', 'SCO', 'MAR', 0, 1, '2026-06-19T22:00:00Z', true),
-	m('C', 'BRA', 'HTI', 3, 0, '2026-06-20T00:30:00Z', true),
-	m('C', 'SCO', 'BRA', 0, 3, '2026-06-24T22:00:00Z', true),
-	m('C', 'MAR', 'HTI', 4, 2, '2026-06-24T22:00:00Z', true),
-	m('D', 'USA', 'PAR', 4, 1, '2026-06-13T01:00:00Z', true),
-	m('D', 'AUS', 'TUR', 2, 0, '2026-06-14T04:00:00Z', true),
-	m('D', 'USA', 'AUS', 2, 0, '2026-06-19T19:00:00Z', true),
-	m('D', 'TUR', 'PAR', 0, 1, '2026-06-20T03:00:00Z', true),
-	m('D', 'TUR', 'USA', 3, 2, '2026-06-26T02:00:00Z', true),
-	m('D', 'PAR', 'AUS', 0, 0, '2026-06-26T02:00:00Z', true),
-	m('E', 'GER', 'CUW', 7, 1, '2026-06-14T17:00:00Z', true),
-	m('E', 'CIV', 'ECU', 1, 0, '2026-06-14T23:00:00Z', true),
-	m('E', 'GER', 'CIV', 2, 1, '2026-06-20T20:00:00Z', true),
-	m('E', 'ECU', 'CUW', 0, 0, '2026-06-21T00:00:00Z', true),
-	m('E', 'ECU', 'GER', 2, 1, '2026-06-25T20:00:00Z', true),
-	m('E', 'CUW', 'CIV', 0, 2, '2026-06-25T20:00:00Z', true),
-	m('F', 'NED', 'JPN', 2, 2, '2026-06-14T20:00:00Z', true),
-	m('F', 'SWE', 'TUN', 5, 1, '2026-06-15T02:00:00Z', true),
-	m('F', 'NED', 'SWE', 5, 1, '2026-06-20T17:00:00Z', true),
-	m('F', 'TUN', 'JPN', 0, 4, '2026-06-21T04:00:00Z', true),
-	m('F', 'TUN', 'NED', 1, 3, '2026-06-25T23:00:00Z', true),
-	m('F', 'JPN', 'SWE', 1, 1, '2026-06-25T23:00:00Z', true),
-	m('G', 'BEL', 'EGY', 1, 1, '2026-06-15T19:00:00Z', true),
-	m('G', 'IRI', 'NZL', 2, 2, '2026-06-16T01:00:00Z', true),
-	m('G', 'BEL', 'IRI', 0, 0, '2026-06-21T19:00:00Z', true),
-	m('G', 'NZL', 'EGY', 1, 3, '2026-06-22T01:00:00Z', true),
-	m('G', 'NZL', 'BEL', 1, 5, '2026-06-27T03:00:00Z', true),
-	m('G', 'EGY', 'IRI', 1, 1, '2026-06-27T03:00:00Z', true),
-	m('H', 'ESP', 'CPV', 0, 0, '2026-06-15T16:00:00Z', true),
-	m('H', 'KSA', 'URU', 1, 1, '2026-06-15T22:00:00Z', true),
-	m('H', 'ESP', 'KSA', 4, 0, '2026-06-21T16:00:00Z', true),
-	m('H', 'URU', 'CPV', 2, 2, '2026-06-21T22:00:00Z', true),
-	m('H', 'URU', 'ESP', 0, 1, '2026-06-27T00:00:00Z', true),
-	m('H', 'CPV', 'KSA', 0, 0, '2026-06-27T00:00:00Z', true),
-	m('I', 'FRA', 'SEN', 3, 1, '2026-06-16T19:00:00Z', true),
-	m('I', 'IRQ', 'NOR', 1, 4, '2026-06-16T22:00:00Z', true),
-	m('I', 'FRA', 'IRQ', 3, 0, '2026-06-22T21:00:00Z', true),
-	m('I', 'NOR', 'SEN', 3, 2, '2026-06-23T00:00:00Z', true),
-	m('I', 'NOR', 'FRA', 1, 4, '2026-06-26T19:00:00Z', true),
-	m('I', 'SEN', 'IRQ', 5, 0, '2026-06-26T19:00:00Z', true),
-	m('J', 'ARG', 'DZA', 3, 0, '2026-06-17T01:00:00Z', true),
-	m('J', 'AUT', 'JOR', 3, 1, '2026-06-17T04:00:00Z', true),
-	m('J', 'ARG', 'AUT', 2, 0, '2026-06-22T17:00:00Z', true),
-	m('J', 'JOR', 'DZA', 1, 2, '2026-06-23T03:00:00Z', true),
-	m('J', 'JOR', 'ARG', 1, 3, '2026-06-28T02:00:00Z', true),
-	m('J', 'DZA', 'AUT', 3, 3, '2026-06-28T02:00:00Z', true),
-	m('K', 'POR', 'COD', 1, 1, '2026-06-17T17:00:00Z', true),
-	m('K', 'UZB', 'COL', 1, 3, '2026-06-18T02:00:00Z', true),
-	m('K', 'POR', 'UZB', 5, 0, '2026-06-23T17:00:00Z', true),
-	m('K', 'COL', 'COD', 1, 0, '2026-06-24T02:00:00Z', true),
-	m('K', 'COL', 'POR', 0, 0, '2026-06-27T23:30:00Z', true),
-	m('K', 'COD', 'UZB', 3, 1, '2026-06-27T23:30:00Z', true),
-	m('L', 'ENG', 'CRO', 4, 2, '2026-06-17T20:00:00Z', true),
-	m('L', 'GHA', 'PAN', 1, 0, '2026-06-17T23:00:00Z', true),
-	m('L', 'ENG', 'GHA', 0, 0, '2026-06-23T20:00:00Z', true),
-	m('L', 'PAN', 'CRO', 0, 1, '2026-06-23T23:00:00Z', true),
-	m('L', 'PAN', 'ENG', 0, 2, '2026-06-27T21:00:00Z', true),
-	m('L', 'CRO', 'GHA', 2, 1, '2026-06-27T21:00:00Z', true),
-];
+const OFFICIAL_RESULTS = globalThis.WC26_OFFICIAL_RESULTS || {};
+const BASE_KNOCKOUT_RESULTS = OFFICIAL_RESULTS.knockout || {};
+const BASE_MATCHES = normalizeGroupMatches(
+	OFFICIAL_RESULTS.groupMatches || [],
+);
 
 function m(group, home, away, homeScore, awayScore, kickoff, played = false) {
 	return {
@@ -154,64 +85,19 @@ function m(group, home, away, homeScore, awayScore, kickoff, played = false) {
 	};
 }
 
-const BASE_KNOCKOUT_RESULTS = {
-	73: {
-		homeTeam: 'RSA',
-		awayTeam: 'CAN',
-		home: 0,
-		away: 1,
-		tiebreakWinner: null,
-	},
-	74: {
-		homeTeam: 'GER',
-		awayTeam: 'PAR',
-		home: 1,
-		away: 1,
-		tiebreakWinner: 'PAR',
-	},
-	75: {
-		homeTeam: 'NED',
-		awayTeam: 'MAR',
-		home: 1,
-		away: 1,
-		tiebreakWinner: 'MAR',
-	},
-	76: {
-		homeTeam: 'BRA',
-		awayTeam: 'JPN',
-		home: 2,
-		away: 1,
-		tiebreakWinner: null,
-	},
-	77: {
-		homeTeam: 'FRA',
-		awayTeam: 'SWE',
-		home: 3,
-		away: 0,
-		tiebreakWinner: null,
-	},
-	78: {
-		homeTeam: 'CIV',
-		awayTeam: 'NOR',
-		home: 1,
-		away: 2,
-		tiebreakWinner: null,
-	},
-	79: {
-		homeTeam: 'MEX',
-		awayTeam: 'ECU',
-		home: 2,
-		away: 0,
-		tiebreakWinner: null,
-	},
-	80: {
-		homeTeam: 'ENG',
-		awayTeam: 'COD',
-		home: 1,
-		away: 0,
-		tiebreakWinner: null,
-	},
-};
+function normalizeGroupMatches(matches) {
+	return matches.map(match =>
+		m(
+			match.group,
+			match.home,
+			match.away,
+			Number.isInteger(match.homeScore) ? match.homeScore : null,
+			Number.isInteger(match.awayScore) ? match.awayScore : null,
+			match.kickoff,
+			Boolean(match.played),
+		),
+	);
+}
 
 const R32 = [
 	{ no: 73, a: '2A', b: '2B' },
@@ -1662,7 +1548,7 @@ function officialKnockoutRecord(no, home, away, signature) {
 		away: official.away,
 		tiebreakWinner,
 		signature,
-		source: 'official',
+		source: official.mock ? 'mock' : 'official',
 	};
 }
 
