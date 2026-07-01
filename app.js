@@ -183,6 +183,34 @@ const BASE_KNOCKOUT_RESULTS = {
 		away: 1,
 		tiebreakWinner: null,
 	},
+	77: {
+		homeTeam: 'FRA',
+		awayTeam: 'SWE',
+		home: 3,
+		away: 0,
+		tiebreakWinner: null,
+	},
+	78: {
+		homeTeam: 'CIV',
+		awayTeam: 'NOR',
+		home: 1,
+		away: 2,
+		tiebreakWinner: null,
+	},
+	79: {
+		homeTeam: 'MEX',
+		awayTeam: 'ECU',
+		home: 2,
+		away: 0,
+		tiebreakWinner: null,
+	},
+	80: {
+		homeTeam: 'ENG',
+		awayTeam: 'COD',
+		home: 1,
+		away: 0,
+		tiebreakWinner: null,
+	},
 };
 
 const R32 = [
